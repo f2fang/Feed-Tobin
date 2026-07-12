@@ -1,5 +1,6 @@
 let restaurants = [];
-let currentIndex = 0;
+let currentRestaurant = null;
+let rejectedPlaceIds = new Set();
 
 const API_URL = "https://feed-tobin-api.hzieeff.workers.dev";
 
@@ -9,6 +10,9 @@ function findFood(type) {
   restaurantBox.innerHTML = `
     <p>Finding food near you... 😋</p>
   `;
+
+  rejectedPlaceIds.clear();
+  currentRestaurant = null;
 
   if (!navigator.geolocation) {
     restaurantBox.innerHTML = `
@@ -49,8 +53,6 @@ function findFood(type) {
             return scoreB - scoreA;
           });
 
-        currentIndex = 0;
-
         if (restaurants.length === 0) {
           restaurantBox.innerHTML = `
             <p>Hmm... I couldn't find a good match 😭</p>
@@ -59,7 +61,7 @@ function findFood(type) {
           return;
         }
 
-        showRestaurant();
+        pickNextRestaurant();
       } catch (error) {
         console.error(error);
 
@@ -79,8 +81,29 @@ function findFood(type) {
   );
 }
 
+function pickNextRestaurant() {
+  const availableRestaurants = restaurants.filter(
+    (restaurant) => !rejectedPlaceIds.has(restaurant.id)
+  );
+
+  if (availableRestaurants.length === 0) {
+    rejectedPlaceIds.clear();
+  }
+
+  const choices =
+    availableRestaurants.length > 0
+      ? availableRestaurants
+      : restaurants;
+
+  const randomIndex = Math.floor(Math.random() * choices.length);
+
+  currentRestaurant = choices[randomIndex];
+
+  showRestaurant();
+}
+
 function showRestaurant() {
-  const restaurant = restaurants[currentIndex];
+  const restaurant = currentRestaurant;
 
   const name =
     restaurant.displayName?.text || "Restaurant";
@@ -122,11 +145,9 @@ function showRestaurant() {
 }
 
 function nextRestaurant() {
-  currentIndex++;
-
-  if (currentIndex >= restaurants.length) {
-    currentIndex = 0;
+  if (currentRestaurant) {
+    rejectedPlaceIds.add(currentRestaurant.id);
   }
 
-  showRestaurant();
+  pickNextRestaurant();
 }
