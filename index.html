@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Feed Tobin 😋</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <h1>Feed Tobin 😋</h1>
+
+    <p>What do you feel like eating?</p>
+
+    <div class="food-buttons">
+
+      <button onclick="findFood('hamburger_restaurant')">
+        🍔 Burger
+      </button>
+
+      <button onclick="findFood('pizza_restaurant')">
+        🍕 Pizza
+      </button>
+
+      <button onclick="findFood('sushi_restaurant')">
+        🍣 Sushi
+      </button>
+
+      <button onclick="findFood('mexican_restaurant')">
+        🌮 Mexican
+      </button>
+
+      <button onclick="findFood('restaurant')">
+        🎲 Surprise Me
+      </button>
+
+    </div>
+
+    <div id="restaurant"></div>
+
+  </main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
