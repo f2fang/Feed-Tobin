@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Feed Tobin 😋</title>
 
@@ -19,6 +24,22 @@
 
     <div class="food-buttons">
 
+      <button onclick="findFood('korean_restaurant')">
+        🇰🇷 Korean
+      </button>
+
+      <button onclick="findFood('japanese_restaurant')">
+        🇯🇵 Japanese
+      </button>
+
+      <button onclick="findFood('chinese_restaurant')">
+        🇨🇳 Chinese
+      </button>
+
+      <button onclick="findFood('italian_restaurant')">
+        🇮🇹 Italian
+      </button>
+
       <button onclick="findFood('hamburger_restaurant')">
         🍔 Burger
       </button>
@@ -27,15 +48,16 @@
         🍕 Pizza
       </button>
 
-      <button onclick="findFood('sushi_restaurant')">
-        🍣 Sushi
+      <button onclick="findFood('fast_food_restaurant')">
+        🍟 Fast Food
       </button>
 
-      <button onclick="findFood('mexican_restaurant')">
-        🌮 Mexican
+      <button onclick="findFood('hawaiian')">
+        🌺 Local Hawaiian
       </button>
 
-      <button onclick="findFood('restaurant')">
+      <button class="surprise-button"
+              onclick="findFood('restaurant')">
         🎲 Surprise Me
       </button>
 
@@ -48,4 +70,5 @@
   <script src="app.js"></script>
 
 </body>
+
 </html>
