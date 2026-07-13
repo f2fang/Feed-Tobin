@@ -1,3 +1,4 @@
+let allRestaurants = [];
 let restaurantQueue = [];
 let currentRestaurant = null;
 
@@ -12,6 +13,7 @@ function findFood(type) {
     <p>Finding food near you... 😊</p>
   `;
 
+  allRestaurants = [];
   restaurantQueue = [];
   currentRestaurant = null;
 
@@ -33,13 +35,8 @@ function findFood(type) {
         );
 
         if (!response.ok) {
-          const errorData = await response.json();
-
-          console.error("API error:", errorData);
-
           throw new Error(
-            errorData.error ||
-              "Unable to get restaurants"
+            "Unable to get restaurants"
           );
         }
 
@@ -47,15 +44,13 @@ function findFood(type) {
 
         const restaurants = (data.places || [])
           .filter((place) => {
-            const rating =
-              place.rating || 0;
-
-            const reviewCount =
+            const rating = place.rating || 0;
+            const reviews =
               place.userRatingCount || 0;
 
             return (
               rating >= 4.0 &&
-              reviewCount >= 50
+              reviews >= 50
             );
           });
 
@@ -67,8 +62,7 @@ function findFood(type) {
           return;
         }
 
-        // Remove duplicate Google Place IDs
-        const uniqueRestaurants = [
+        allRestaurants = [
           ...new Map(
             restaurants.map((restaurant) => [
               restaurant.id,
@@ -77,11 +71,11 @@ function findFood(type) {
           ).values(),
         ];
 
-        // Shuffle only once
         restaurantQueue =
-          shuffleArray(uniqueRestaurants);
+          shuffleArray(allRestaurants);
 
         pickNextRestaurant();
+
       } catch (error) {
         console.error(error);
 
@@ -92,12 +86,7 @@ function findFood(type) {
       }
     },
 
-    (error) => {
-      console.error(
-        "Location error:",
-        error
-      );
-
+    () => {
       restaurantBox.innerHTML = `
         <p>I need your location to find food near you 📍</p>
         <p>Please allow location access and try again.</p>
@@ -113,24 +102,29 @@ function findFood(type) {
 }
 
 function pickNextRestaurant() {
+  const previousRestaurant =
+    currentRestaurant;
+
+  // Finished one round — reshuffle and start again
   if (restaurantQueue.length === 0) {
-    currentRestaurant = null;
+    restaurantQueue =
+      shuffleArray(allRestaurants);
 
-    document.getElementById(
-      "restaurant"
-    ).innerHTML = `
-      <h2>You've seen them all 😂</h2>
-
-      <p>
-        I showed you every good match I found.
-      </p>
-
-      <p>
-        Pick another food type 😋
-      </p>
-    `;
-
-    return;
+    // Avoid immediate repeat between rounds
+    if (
+      restaurantQueue.length > 1 &&
+      previousRestaurant &&
+      restaurantQueue[0].id ===
+        previousRestaurant.id
+    ) {
+      [
+        restaurantQueue[0],
+        restaurantQueue[1],
+      ] = [
+        restaurantQueue[1],
+        restaurantQueue[0],
+      ];
+    }
   }
 
   currentRestaurant =
