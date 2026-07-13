@@ -2,17 +2,20 @@ let restaurants = [];
 let currentRestaurant = null;
 let rejectedPlaceIds = new Set();
 
-const API_URL = "https://feed-tobin-api.hzieeff.workers.dev";
+const API_URL =
+  "https://feed-tobin-api.hzieeff.workers.dev";
 
 function findFood(type) {
-  const restaurantBox = document.getElementById("restaurant");
+  const restaurantBox =
+    document.getElementById("restaurant");
 
   restaurantBox.innerHTML = `
-    <p>Finding food near you... 😋</p>
+    <p>Finding food near you... 😊</p>
   `;
 
-  rejectedPlaceIds.clear();
+  restaurants = [];
   currentRestaurant = null;
+  rejectedPlaceIds.clear();
 
   if (!navigator.geolocation) {
     restaurantBox.innerHTML = `
@@ -32,25 +35,33 @@ function findFood(type) {
         );
 
         if (!response.ok) {
-          throw new Error("Unable to get restaurants");
+          const errorData = await response.json();
+
+          console.error(
+            "API error:",
+            errorData
+          );
+
+          throw new Error(
+            errorData.error ||
+              "Unable to get restaurants"
+          );
         }
 
         const data = await response.json();
 
         restaurants = (data.places || [])
-          .filter(
-            (place) =>
-              place.rating >= 4.3 &&
-              place.userRatingCount >= 100
-          )
-          .sort((a, b) => {
-            const scoreA =
-              a.rating * Math.log10(a.userRatingCount + 1);
+          .filter((place) => {
+            const rating =
+              place.rating || 0;
 
-            const scoreB =
-              b.rating * Math.log10(b.userRatingCount + 1);
+            const reviewCount =
+              place.userRatingCount || 0;
 
-            return scoreB - scoreA;
+            return (
+              rating >= 4.0 &&
+              reviewCount >= 50
+            );
           });
 
         if (restaurants.length === 0) {
@@ -58,6 +69,7 @@ function findFood(type) {
             <p>Hmm... I couldn't find a good match 😭</p>
             <p>Try another food type.</p>
           `;
+
           return;
         }
 
@@ -71,42 +83,65 @@ function findFood(type) {
         `;
       }
     },
+
     (error) => {
-      console.error(error);
+      console.error(
+        "Location error:",
+        error
+      );
 
       restaurantBox.innerHTML = `
         <p>I need your location to find food near you 📍</p>
+        <p>Please allow location access and try again.</p>
       `;
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 300000,
     }
   );
 }
 
 function pickNextRestaurant() {
-  const availableRestaurants = restaurants.filter(
-    (restaurant) => !rejectedPlaceIds.has(restaurant.id)
-  );
+  let availableRestaurants =
+    restaurants.filter(
+      (restaurant) =>
+        !rejectedPlaceIds.has(
+          restaurant.id
+        )
+    );
 
+  // All restaurants have been shown
   if (availableRestaurants.length === 0) {
     rejectedPlaceIds.clear();
+
+    availableRestaurants = [...restaurants];
   }
 
-  const choices =
-    availableRestaurants.length > 0
-      ? availableRestaurants
-      : restaurants;
+  const randomIndex = Math.floor(
+    Math.random() *
+      availableRestaurants.length
+  );
 
-  const randomIndex = Math.floor(Math.random() * choices.length);
-
-  currentRestaurant = choices[randomIndex];
+  currentRestaurant =
+    availableRestaurants[randomIndex];
 
   showRestaurant();
 }
 
 function showRestaurant() {
-  const restaurant = currentRestaurant;
+  if (!currentRestaurant) {
+    return;
+  }
+
+  const restaurant =
+    currentRestaurant;
 
   const name =
-    restaurant.displayName?.text || "Restaurant";
+    restaurant.displayName?.text ||
+    "Restaurant";
 
   const rating =
     restaurant.rating || "N/A";
@@ -118,36 +153,78 @@ function showRestaurant() {
     restaurant.formattedAddress || "";
 
   const googleSearchUrl =
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(
       `${name} ${address}`
-    )}`;
+    );
 
-  document.getElementById("restaurant").innerHTML = `
+  const restaurantBox =
+    document.getElementById("restaurant");
+
+  restaurantBox.innerHTML = `
     <h2>🍽️ Tonight's Pick</h2>
 
-    <h2>${name}</h2>
+    <h2>${escapeHtml(name)}</h2>
 
     <p>
       ⭐ ${rating}
       (${reviewCount.toLocaleString()} reviews)
     </p>
 
-    <p>📍 ${address}</p>
+    <p>
+      📍 ${escapeHtml(address)}
+    </p>
 
-    <button onclick="window.open('${googleSearchUrl}', '_blank')">
+    <button
+      class="get-this-button"
+      onclick="openRestaurant()"
+    >
       GET THIS 😋
     </button>
 
-    <button onclick="nextRestaurant()">
+    <button
+      class="nah-button"
+      onclick="nextRestaurant()"
+    >
       Nah... pick another 😂
     </button>
   `;
+
+  restaurantBox.dataset.googleUrl =
+    googleSearchUrl;
 }
 
 function nextRestaurant() {
-  if (currentRestaurant) {
-    rejectedPlaceIds.add(currentRestaurant.id);
+  if (currentRestaurant?.id) {
+    rejectedPlaceIds.add(
+      currentRestaurant.id
+    );
   }
 
   pickNextRestaurant();
+}
+
+function openRestaurant() {
+  const restaurantBox =
+    document.getElementById("restaurant");
+
+  const googleUrl =
+    restaurantBox.dataset.googleUrl;
+
+  if (googleUrl) {
+    window.open(
+      googleUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+}
+
+function escapeHtml(value) {
+  const div =
+    document.createElement("div");
+
+  div.textContent = value;
+
+  return div.innerHTML;
 }
