@@ -1,6 +1,5 @@
-let restaurants = [];
+let restaurantQueue = [];
 let currentRestaurant = null;
-let rejectedPlaceIds = new Set();
 
 const API_URL =
   "https://feed-tobin-api.hzieeff.workers.dev";
@@ -13,9 +12,8 @@ function findFood(type) {
     <p>Finding food near you... 😊</p>
   `;
 
-  restaurants = [];
+  restaurantQueue = [];
   currentRestaurant = null;
-  rejectedPlaceIds.clear();
 
   if (!navigator.geolocation) {
     restaurantBox.innerHTML = `
@@ -37,10 +35,7 @@ function findFood(type) {
         if (!response.ok) {
           const errorData = await response.json();
 
-          console.error(
-            "API error:",
-            errorData
-          );
+          console.error("API error:", errorData);
 
           throw new Error(
             errorData.error ||
@@ -50,7 +45,7 @@ function findFood(type) {
 
         const data = await response.json();
 
-        restaurants = (data.places || [])
+        const restaurants = (data.places || [])
           .filter((place) => {
             const rating =
               place.rating || 0;
@@ -69,9 +64,22 @@ function findFood(type) {
             <p>Hmm... I couldn't find a good match 😭</p>
             <p>Try another food type.</p>
           `;
-
           return;
         }
+
+        // Remove duplicate Google Place IDs
+        const uniqueRestaurants = [
+          ...new Map(
+            restaurants.map((restaurant) => [
+              restaurant.id,
+              restaurant,
+            ])
+          ).values(),
+        ];
+
+        // Shuffle only once
+        restaurantQueue =
+          shuffleArray(uniqueRestaurants);
 
         pickNextRestaurant();
       } catch (error) {
@@ -105,28 +113,28 @@ function findFood(type) {
 }
 
 function pickNextRestaurant() {
-  let availableRestaurants =
-    restaurants.filter(
-      (restaurant) =>
-        !rejectedPlaceIds.has(
-          restaurant.id
-        )
-    );
+  if (restaurantQueue.length === 0) {
+    currentRestaurant = null;
 
-  // All restaurants have been shown
-  if (availableRestaurants.length === 0) {
-    rejectedPlaceIds.clear();
+    document.getElementById(
+      "restaurant"
+    ).innerHTML = `
+      <h2>You've seen them all 😂</h2>
 
-    availableRestaurants = [...restaurants];
+      <p>
+        I showed you every good match I found.
+      </p>
+
+      <p>
+        Pick another food type 😋
+      </p>
+    `;
+
+    return;
   }
 
-  const randomIndex = Math.floor(
-    Math.random() *
-      availableRestaurants.length
-  );
-
   currentRestaurant =
-    availableRestaurants[randomIndex];
+    restaurantQueue.shift();
 
   showRestaurant();
 }
@@ -175,12 +183,16 @@ function showRestaurant() {
       📍 ${escapeHtml(address)}
     </p>
 
-    <button
+    <p class="remaining">
+      ${restaurantQueue.length} more picks available
+    </p>
+
+    <a
       class="get-this-button"
-      onclick="openRestaurant()"
+      href="${googleSearchUrl}"
     >
       GET THIS 😋
-    </button>
+    </a>
 
     <button
       class="nah-button"
@@ -189,35 +201,34 @@ function showRestaurant() {
       Nah... pick another 😂
     </button>
   `;
-
-  restaurantBox.dataset.googleUrl =
-    googleSearchUrl;
 }
 
 function nextRestaurant() {
-  if (currentRestaurant?.id) {
-    rejectedPlaceIds.add(
-      currentRestaurant.id
-    );
-  }
-
   pickNextRestaurant();
 }
 
-function openRestaurant() {
-  const restaurantBox =
-    document.getElementById("restaurant");
+function shuffleArray(array) {
+  const shuffled = [...array];
 
-  const googleUrl =
-    restaurantBox.dataset.googleUrl;
-
-  if (googleUrl) {
-    window.open(
-      googleUrl,
-      "_blank",
-      "noopener,noreferrer"
+  for (
+    let i = shuffled.length - 1;
+    i > 0;
+    i--
+  ) {
+    const j = Math.floor(
+      Math.random() * (i + 1)
     );
+
+    [
+      shuffled[i],
+      shuffled[j],
+    ] = [
+      shuffled[j],
+      shuffled[i],
+    ];
   }
+
+  return shuffled;
 }
 
 function escapeHtml(value) {

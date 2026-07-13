@@ -92,3 +92,30 @@ button:active {
     padding: 24px 18px;
   }
 }
+.get-this-button {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  padding: 18px 10px;
+  border-radius: 18px;
+  background: #222;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.get-this-button:active {
+  transform: scale(0.96);
+}
+
+.nah-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.remaining {
+  font-size: 14px;
+  color: #888;
+}
