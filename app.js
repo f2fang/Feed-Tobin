@@ -1,11 +1,36 @@
 let allRestaurants = [];
 let restaurantQueue = [];
 let currentRestaurant = null;
+let currentFoodType = null;
+let currentSearchType = null;
+let lastSurpriseType = null;
 
 const API_URL =
   "https://feed-tobin-api.hzieeff.workers.dev";
 
+const surpriseTypes = [
+  "korean_restaurant",
+  "japanese_restaurant",
+  "chinese_restaurant",
+  "italian_restaurant",
+  "hamburger_restaurant",
+  "pizza_restaurant",
+  "fast_food_restaurant",
+  "hawaiian",
+];
+
 function findFood(type) {
+  currentFoodType = type;
+
+  if (type === "restaurant") {
+    findSurpriseFood();
+    return;
+  }
+
+  findFoodFromApi(type);
+}
+
+async function findFoodFromApi(type) {
   const restaurantBox =
     document.getElementById("restaurant");
 
@@ -16,6 +41,7 @@ function findFood(type) {
   allRestaurants = [];
   restaurantQueue = [];
   currentRestaurant = null;
+  currentSearchType = type;
 
   if (!navigator.geolocation) {
     restaurantBox.innerHTML = `
@@ -35,8 +61,16 @@ function findFood(type) {
         );
 
         if (!response.ok) {
+          const errorData = await response.json();
+
+          console.error(
+            "API error:",
+            errorData
+          );
+
           throw new Error(
-            "Unable to get restaurants"
+            errorData.error ||
+              "Unable to get restaurants"
           );
         }
 
@@ -44,7 +78,9 @@ function findFood(type) {
 
         const restaurants = (data.places || [])
           .filter((place) => {
-            const rating = place.rating || 0;
+            const rating =
+              place.rating || 0;
+
             const reviews =
               place.userRatingCount || 0;
 
@@ -55,10 +91,16 @@ function findFood(type) {
           });
 
         if (restaurants.length === 0) {
+          if (currentFoodType === "restaurant") {
+            findSurpriseFood();
+            return;
+          }
+
           restaurantBox.innerHTML = `
             <p>Hmm... I couldn't find a good match 😭</p>
             <p>Try another food type.</p>
           `;
+
           return;
         }
 
@@ -101,16 +143,43 @@ function findFood(type) {
   );
 }
 
+function findSurpriseFood() {
+  const randomType =
+    getRandomSurpriseType();
+
+  lastSurpriseType = randomType;
+
+  findFoodFromApi(randomType);
+}
+
+function getRandomSurpriseType() {
+  let availableTypes =
+    surpriseTypes.filter(
+      (type) =>
+        type !== lastSurpriseType
+    );
+
+  if (availableTypes.length === 0) {
+    availableTypes =
+      [...surpriseTypes];
+  }
+
+  const randomIndex = Math.floor(
+    Math.random() *
+      availableTypes.length
+  );
+
+  return availableTypes[randomIndex];
+}
+
 function pickNextRestaurant() {
   const previousRestaurant =
     currentRestaurant;
 
-  // Finished one round — reshuffle and start again
   if (restaurantQueue.length === 0) {
     restaurantQueue =
       shuffleArray(allRestaurants);
 
-    // Avoid immediate repeat between rounds
     if (
       restaurantQueue.length > 1 &&
       previousRestaurant &&
@@ -198,6 +267,11 @@ function showRestaurant() {
 }
 
 function nextRestaurant() {
+  if (currentFoodType === "restaurant") {
+    findSurpriseFood();
+    return;
+  }
+
   pickNextRestaurant();
 }
 
