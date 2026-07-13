@@ -17,6 +17,45 @@ const surpriseTypes = [
   "pizza_restaurant",
   "fast_food_restaurant",
   "hawaiian",
+
+  "thai",
+  "vietnamese",
+  "indian",
+  "mexican",
+  "filipino",
+  "greek",
+  "mediterranean",
+  "french",
+  "spanish",
+  "middle_eastern",
+  "cajun",
+  "caribbean",
+  "african",
+  "brazilian",
+  "peruvian",
+
+  "american",
+  "southern",
+  "bbq",
+  "seafood",
+  "steakhouse",
+
+  "sushi",
+  "ramen",
+  "pho",
+  "dim_sum",
+  "hot_pot",
+  "noodles",
+  "poke",
+
+  "tacos",
+  "sandwiches",
+  "fried_chicken",
+  "breakfast",
+  "brunch",
+  "bakery",
+  "food_truck",
+  "local_food",
 ];
 
 function findFood(type) {
@@ -75,6 +114,12 @@ async function findFoodFromApi(type) {
         }
 
         const data = await response.json();
+
+        console.log(
+          "Food search:",
+          type,
+          data.query
+        );
 
         const restaurants = (data.places || [])
           .filter((place) => {
@@ -153,16 +198,11 @@ function findSurpriseFood() {
 }
 
 function getRandomSurpriseType() {
-  let availableTypes =
+  const availableTypes =
     surpriseTypes.filter(
       (type) =>
         type !== lastSurpriseType
     );
-
-  if (availableTypes.length === 0) {
-    availableTypes =
-      [...surpriseTypes];
-  }
 
   const randomIndex = Math.floor(
     Math.random() *
@@ -232,8 +272,22 @@ function showRestaurant() {
   const restaurantBox =
     document.getElementById("restaurant");
 
+  const surpriseLabel =
+    currentFoodType === "restaurant"
+      ? `
+        <p class="surprise-type">
+          🎲 Surprise category:
+          ${escapeHtml(
+            formatFoodType(currentSearchType)
+          )}
+        </p>
+      `
+      : "";
+
   restaurantBox.innerHTML = `
     <h2>🍽️ Tonight's Pick</h2>
+
+    ${surpriseLabel}
 
     <h2>${escapeHtml(name)}</h2>
 
@@ -273,6 +327,56 @@ function nextRestaurant() {
   }
 
   pickNextRestaurant();
+}
+
+function formatFoodType(type) {
+  const labels = {
+    korean_restaurant: "Korean",
+    japanese_restaurant: "Japanese",
+    chinese_restaurant: "Chinese",
+    italian_restaurant: "Italian",
+    hamburger_restaurant: "Burgers",
+    pizza_restaurant: "Pizza",
+    fast_food_restaurant: "Fast Food",
+    hawaiian: "Local Hawaiian",
+    thai: "Thai",
+    vietnamese: "Vietnamese",
+    indian: "Indian",
+    mexican: "Mexican",
+    filipino: "Filipino",
+    greek: "Greek",
+    mediterranean: "Mediterranean",
+    french: "French",
+    spanish: "Spanish",
+    middle_eastern: "Middle Eastern",
+    cajun: "Cajun",
+    caribbean: "Caribbean",
+    african: "African",
+    brazilian: "Brazilian",
+    peruvian: "Peruvian",
+    american: "American",
+    southern: "Southern",
+    bbq: "BBQ",
+    seafood: "Seafood",
+    steakhouse: "Steakhouse",
+    sushi: "Sushi",
+    ramen: "Ramen",
+    pho: "Pho",
+    dim_sum: "Dim Sum",
+    hot_pot: "Hot Pot",
+    noodles: "Noodles",
+    poke: "Poke",
+    tacos: "Tacos",
+    sandwiches: "Sandwiches",
+    fried_chicken: "Fried Chicken",
+    breakfast: "Breakfast",
+    brunch: "Brunch",
+    bakery: "Bakery",
+    food_truck: "Food Truck",
+    local_food: "Local Food",
+  };
+
+  return labels[type] || type;
 }
 
 function shuffleArray(array) {
