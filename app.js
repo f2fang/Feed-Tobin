@@ -350,22 +350,34 @@ function showRestaurant() {
     <p class="remaining">
       ${remainingText}
     </p>
+<a
+  class="get-this-button"
+  href="${googleSearchUrl}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <img
+    class="button-tobin-face"
+    src="images/tobin-yes.png"
+    alt=""
+  >
 
-    <a
-      class="get-this-button"
-      href="${googleSearchUrl}"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      GET THIS 😋
-    </a>
+  <span>GET THIS</span>
+</a>
 
-    <button
-      class="nah-button"
-      onclick="nextRestaurant()"
-    >
-      Nah... pick another 😂
-    </button>
+<button
+  type="button"
+  class="nah-button"
+  onclick="nextRestaurant()"
+>
+  <img
+    class="button-tobin-face"
+    src="images/tobin-no.png"
+    alt=""
+  >
+
+  <span>Nah... pick another</span>
+</button>
   `;
 }
 
