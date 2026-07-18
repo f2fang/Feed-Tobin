@@ -9,11 +9,16 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="description"
+    content="Feed My Belly helps you choose a nearby restaurant."
+  >
+
   <title>Feed My Belly 😋</title>
 
   <link
     rel="stylesheet"
-    href="style.css?v=6"
+    href="style.css?v=8"
   >
 </head>
 
@@ -21,7 +26,7 @@
 
   <main class="container">
 
-    <div class="app-title">
+    <header class="app-header">
 
       <div
         class="tobin-mouth"
@@ -29,66 +34,102 @@
         aria-label="Animated Tobin opening his mouth"
       ></div>
 
-      <h1>Feed My Belly 😋</h1>
+      <h1>Feed My Belly</h1>
 
       <p class="subtitle">
         Can't decide what to eat? I'll pick for you.
       </p>
 
-    </div>
+    </header>
 
-    <div class="food-buttons">
+    <section
+      class="food-section"
+      aria-label="Choose a food category"
+    >
 
-      <button onclick="findFood('korean_restaurant')">
-        🇰🇷 Korean
-      </button>
+      <div class="food-buttons">
 
-      <button onclick="findFood('japanese_restaurant')">
-        🇯🇵 Japanese
-      </button>
+        <button
+          type="button"
+          onclick="findFood('korean_restaurant')"
+        >
+          🇰🇷 Korean
+        </button>
 
-      <button onclick="findFood('chinese_restaurant')">
-        🇨🇳 Chinese
-      </button>
+        <button
+          type="button"
+          onclick="findFood('japanese_restaurant')"
+        >
+          🇯🇵 Japanese
+        </button>
 
-      <button onclick="findFood('italian_restaurant')">
-        🇮🇹 Italian
-      </button>
+        <button
+          type="button"
+          onclick="findFood('chinese_restaurant')"
+        >
+          🇨🇳 Chinese
+        </button>
 
-      <button onclick="findFood('hamburger_restaurant')">
-        🍔 Burger
-      </button>
+        <button
+          type="button"
+          onclick="findFood('italian_restaurant')"
+        >
+          🇮🇹 Italian
+        </button>
 
-      <button onclick="findFood('pizza_restaurant')">
-        🍕 Pizza
-      </button>
+        <button
+          type="button"
+          onclick="findFood('hamburger_restaurant')"
+        >
+          🍔 Burger
+        </button>
 
-      <button onclick="findFood('fast_food_restaurant')">
-        🍟 Fast Food
-      </button>
+        <button
+          type="button"
+          onclick="findFood('pizza_restaurant')"
+        >
+          🍕 Pizza
+        </button>
 
-      <button onclick="findFood('hawaiian restaurant')">
-        🌺 Local Hawaiian
-      </button>
+        <button
+          type="button"
+          onclick="findFood('fast_food_restaurant')"
+        >
+          🍟 Fast Food
+        </button>
 
-      <button
-        class="surprise-button"
-        onclick="findFood('restaurant')"
-      >
-        🎲 Surprise Me
-      </button>
+        <button
+          type="button"
+          onclick="findFood('hawaiian restaurant')"
+        >
+          🌺 Local Hawaiian
+        </button>
 
-    </div>
+        <button
+          type="button"
+          class="surprise-button"
+          onclick="findFood('restaurant')"
+        >
+          🎲 Surprise Me
+        </button>
 
-    <div id="restaurant">
+      </div>
+
+    </section>
+
+    <section
+      id="restaurant"
+      class="restaurant-card"
+      aria-live="polite"
+    >
       <p class="starting-message">
         Choose a food type to get started 😊
       </p>
-    </div>
+    </section>
 
   </main>
 
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=17"></script>
 
 </body>
 
