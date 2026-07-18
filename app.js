@@ -95,25 +95,26 @@ async function findFoodFromApi(type) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        const response = await fetch(
-          `${API_URL}/?lat=${lat}&lng=${lng}&type=${type}`
-        );
+        const requestUrl =
+          `${API_URL}/?lat=${encodeURIComponent(lat)}` +
+          `&lng=${encodeURIComponent(lng)}` +
+          `&type=${encodeURIComponent(type)}`;
+
+        const response = await fetch(requestUrl);
+
+        const data = await response.json();
 
         if (!response.ok) {
-          const errorData = await response.json();
-
           console.error(
             "API error:",
-            errorData
+            data
           );
 
           throw new Error(
-            errorData.error ||
+            data.error ||
               "Unable to get restaurants"
           );
         }
-
-        const data = await response.json();
 
         console.log(
           "Food search:",
@@ -121,13 +122,18 @@ async function findFoodFromApi(type) {
           data.query
         );
 
+        console.log(
+          "API restaurants:",
+          data.places
+        );
+
         const restaurants = (data.places || [])
           .filter((place) => {
             const rating =
-              place.rating || 0;
+              Number(place.rating) || 0;
 
             const reviews =
-              place.userRatingCount || 0;
+              Number(place.userRatingCount) || 0;
 
             return (
               rating >= 4.0 &&
@@ -173,7 +179,12 @@ async function findFoodFromApi(type) {
       }
     },
 
-    () => {
+    (error) => {
+      console.error(
+        "Location error:",
+        error
+      );
+
       restaurantBox.innerHTML = `
         <p>I need your location to find food near you 📍</p>
         <p>Please allow location access and try again.</p>
@@ -255,13 +266,41 @@ function showRestaurant() {
     "Restaurant";
 
   const rating =
-    restaurant.rating || "N/A";
+    restaurant.rating ?? "N/A";
 
   const reviewCount =
-    restaurant.userRatingCount || 0;
+    Number(
+      restaurant.userRatingCount
+    ) || 0;
 
   const address =
     restaurant.formattedAddress || "";
+
+  const distance =
+    Number(
+      restaurant.distanceMiles
+    );
+
+  const hasDistance =
+    Number.isFinite(distance);
+
+  const distanceText =
+    hasDistance
+      ? `
+        <p class="distance">
+          📍 ${distance.toFixed(1)} mi away
+        </p>
+      `
+      : "";
+
+  const addressText =
+    address
+      ? `
+        <p class="address">
+          ${escapeHtml(address)}
+        </p>
+      `
+      : "";
 
   const googleSearchUrl =
     "https://www.google.com/maps/search/?api=1&query=" +
@@ -284,6 +323,14 @@ function showRestaurant() {
       `
       : "";
 
+  const remainingCount =
+    restaurantQueue.length;
+
+  const remainingText =
+    remainingCount === 1
+      ? "1 more pick available"
+      : `${remainingCount} more picks available`;
+
   restaurantBox.innerHTML = `
     <h2>🍽️ Tonight's Pick</h2>
 
@@ -291,22 +338,24 @@ function showRestaurant() {
 
     <h2>${escapeHtml(name)}</h2>
 
-    <p>
-      ⭐ ${rating}
+    <p class="rating">
+      ⭐ ${escapeHtml(String(rating))}
       (${reviewCount.toLocaleString()} reviews)
     </p>
 
-    <p>
-      📍 ${escapeHtml(address)}
-    </p>
+    ${distanceText}
+
+    ${addressText}
 
     <p class="remaining">
-      ${restaurantQueue.length} more picks available
+      ${remainingText}
     </p>
 
     <a
       class="get-this-button"
       href="${googleSearchUrl}"
+      target="_blank"
+      rel="noopener noreferrer"
     >
       GET THIS 😋
     </a>
@@ -339,6 +388,7 @@ function formatFoodType(type) {
     pizza_restaurant: "Pizza",
     fast_food_restaurant: "Fast Food",
     hawaiian: "Local Hawaiian",
+
     thai: "Thai",
     vietnamese: "Vietnamese",
     indian: "Indian",
@@ -354,11 +404,13 @@ function formatFoodType(type) {
     african: "African",
     brazilian: "Brazilian",
     peruvian: "Peruvian",
+
     american: "American",
     southern: "Southern",
     bbq: "BBQ",
     seafood: "Seafood",
     steakhouse: "Steakhouse",
+
     sushi: "Sushi",
     ramen: "Ramen",
     pho: "Pho",
@@ -366,6 +418,7 @@ function formatFoodType(type) {
     hot_pot: "Hot Pot",
     noodles: "Noodles",
     poke: "Poke",
+
     tacos: "Tacos",
     sandwiches: "Sandwiches",
     fried_chicken: "Fried Chicken",
@@ -407,7 +460,11 @@ function escapeHtml(value) {
   const div =
     document.createElement("div");
 
-  div.textContent = value;
+  div.textContent =
+    value === null ||
+    value === undefined
+      ? ""
+      : String(value);
 
   return div.innerHTML;
 }
