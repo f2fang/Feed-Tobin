@@ -1,4 +1,4 @@
-# Feed Tobin 😋
+# Feed My Belly  😋
 
 A simple mobile-friendly restaurant recommendation website that helps
 Tobin quickly decide what to eat.
