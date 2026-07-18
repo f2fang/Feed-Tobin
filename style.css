@@ -46,7 +46,7 @@ a {
 .container {
   width: min(100% - 28px, 760px);
   margin: 0 auto;
-  padding: 24px 0 50px;
+  padding: 18px 0 50px;
 }
 
 /* =========================
@@ -58,14 +58,14 @@ a {
   flex-direction: column;
   align-items: center;
 
-  margin-bottom: 28px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
 .tobin-mouth {
-  width: 220px;
-  height: 220px;
-  margin: 0 auto 10px;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto -12px;
 
   background-image:
     url("./images/tobin-mouth-sprite-clean.png");
@@ -107,17 +107,17 @@ h1 {
   margin: 0;
 
   color: var(--orange);
-  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-size: clamp(2.2rem, 6vw, 3.3rem);
   font-weight: 850;
   line-height: 1.05;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.04em;
 }
 
 .subtitle {
-  margin: 14px 0 0;
+  margin: 8px 0 0;
 
   color: var(--muted);
-  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   line-height: 1.45;
 }
 
@@ -358,6 +358,8 @@ h1 {
 
   object-fit: contain;
   flex: 0 0 50px;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* =========================
@@ -371,12 +373,21 @@ h1 {
   }
 
   .tobin-mouth {
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto -8px;
   }
 
   .app-header {
-    margin-bottom: 22px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+
+  .subtitle {
+    margin-top: 6px;
   }
 
   .food-buttons {
