@@ -11,16 +11,31 @@
 
   <title>Feed My Belly 😋</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css?v=6"
+  >
 </head>
 
 <body>
 
   <main class="container">
 
-    <h1>Feed My Belly 😋</h1>
+    <div class="app-title">
 
-    <p>Can't decide what to eat? I'll pick for you.</p>
+      <div
+        class="tobin-mouth"
+        role="img"
+        aria-label="Animated Tobin opening his mouth"
+      ></div>
+
+      <h1>Feed My Belly 😋</h1>
+
+      <p class="subtitle">
+        Can't decide what to eat? I'll pick for you.
+      </p>
+
+    </div>
 
     <div class="food-buttons">
 
@@ -52,7 +67,7 @@
         🍟 Fast Food
       </button>
 
-      <button onclick="findFood('hawaiian')">
+      <button onclick="findFood('hawaiian restaurant')">
         🌺 Local Hawaiian
       </button>
 
@@ -65,11 +80,15 @@
 
     </div>
 
-    <div id="restaurant"></div>
+    <div id="restaurant">
+      <p class="starting-message">
+        Choose a food type to get started 😊
+      </p>
+    </div>
 
   </main>
 
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=16"></script>
 
 </body>
 
