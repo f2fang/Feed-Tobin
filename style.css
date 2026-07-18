@@ -64,15 +64,16 @@ a {
 
 .tobin-mouth {
   width: 320px;
-  height: 320px;
-  margin: 0 auto -30px;
+  height: 230px;
+  margin: 0 auto 6px;
+  overflow: hidden;
 
   background-image:
     url("./images/tobin-mouth-sprite-clean.png");
 
   background-repeat: no-repeat;
-  background-size: 400% 100%;
-  background-position: 0% 0;
+  background-size: 400% auto;
+  background-position: 0% 0%;
 
   animation: tobinEat 1.2s steps(1) infinite;
 }
@@ -373,9 +374,9 @@ h1 {
   }
 
   .tobin-mouth {
-    width: 230px;
-    height: 230px;
-    margin: 0 auto -18px;
+    width: 240px;
+    height: 175px;
+    margin: 0 auto 4px;
   }
 
   .app-header {
