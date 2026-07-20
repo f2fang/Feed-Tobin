@@ -43,8 +43,6 @@ a {
   padding: 8px 0 50px;
 }
 
-/* Header */
-
 .app-header {
   display: flex;
   flex-direction: column;
@@ -66,23 +64,19 @@ a {
 }
 
 @keyframes tobinEat {
-  0%,
-  20% {
+  0%, 20% {
     background-position: 0% 0;
   }
 
-  25%,
-  45% {
+  25%, 45% {
     background-position: 33.333% 0;
   }
 
-  50%,
-  70% {
+  50%, 70% {
     background-position: 66.666% 0;
   }
 
-  75%,
-  95% {
+  75%, 95% {
     background-position: 100% 0;
   }
 
@@ -106,8 +100,6 @@ h1 {
   font-size: clamp(1rem, 2.3vw, 1.15rem);
   line-height: 1.4;
 }
-
-/* Food buttons */
 
 .food-section {
   width: 100%;
@@ -167,8 +159,6 @@ h1 {
   background: var(--orange-dark);
 }
 
-/* Distance */
-
 .distance-section {
   width: 100%;
   margin: 0 0 24px;
@@ -192,14 +182,11 @@ h1 {
   width: 100%;
   min-width: 0;
   min-height: 62px;
-  padding: 9px 6px;
+  padding: 8px 5px;
   border: 1px solid var(--border);
-  border-radius: 17px;
+  border-radius: 16px;
   background: #ffffff;
   color: var(--text);
-  font-size: 0.88rem;
-  font-weight: 750;
-  line-height: 1.2;
   text-align: center;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.055);
@@ -210,11 +197,25 @@ h1 {
     box-shadow 160ms ease;
 }
 
-.distance-btn span {
+.distance-icon {
+  display: block;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.distance-label {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.79rem;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+.distance-mile {
   display: block;
   margin-top: 3px;
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 650;
 }
 
@@ -234,11 +235,9 @@ h1 {
   color: #ffffff;
 }
 
-.distance-btn.active span {
+.distance-btn.active .distance-mile {
   color: rgba(255, 255, 255, 0.9);
 }
-
-/* Restaurant result */
 
 #restaurant {
   width: 100%;
@@ -282,7 +281,8 @@ h1 {
   line-height: 1.2;
 }
 
-.surprise-type {
+.surprise-type,
+.restaurant-type {
   display: inline-block;
   margin: 0 0 12px;
   padding: 7px 14px;
@@ -316,8 +316,6 @@ h1 {
   color: #929292;
   font-size: 0.92rem;
 }
-
-/* Result action buttons */
 
 .get-this-button,
 .nah-button {
@@ -382,8 +380,6 @@ h1 {
   pointer-events: none;
 }
 
-/* Mobile */
-
 @media (max-width: 620px) {
   .container {
     width: min(100% - 24px, 760px);
@@ -424,13 +420,38 @@ h1 {
     grid-column: 1 / -1;
   }
 
+  .distance-section {
+    margin-bottom: 18px;
+  }
+
+  .distance-title {
+    margin-bottom: 8px;
+    font-size: 0.86rem;
+  }
+
   .distance-buttons {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .distance-btn {
-    min-height: 58px;
-    font-size: 0.86rem;
+    min-height: 46px;
+    padding: 5px 2px;
+    border-radius: 12px;
+  }
+
+  .distance-label {
+    display: none;
+  }
+
+  .distance-icon {
+    font-size: 1rem;
+  }
+
+  .distance-mile {
+    margin-top: 3px;
+    font-size: 0.68rem;
+    font-weight: 700;
   }
 
   #restaurant {

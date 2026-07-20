@@ -18,7 +18,7 @@
 
   <link
     rel="stylesheet"
-    href="style.css?v=14"
+    href="style.css?v=15"
   >
 </head>
 
@@ -100,7 +100,7 @@
 
         <button
           type="button"
-          onclick="findFood('hawaiian restaurant')"
+          onclick="findFood('hawaiian')"
         >
           🌺 Local Hawaiian
         </button>
@@ -115,58 +115,72 @@
 
       </div>
 
-</section>
+    </section>
 
-<section class="distance-section">
-
-  <p class="distance-title">
-    📍 Distance
-  </p>
-
-  <div class="distance-buttons">
-
-    <button
-      class="distance-btn active"
-      data-distance="10"
+    <section
+      class="distance-section"
+      aria-label="Choose search distance"
     >
-      🚗 Nearby
-      <span>10 mi</span>
-    </button>
 
-    <button
-      class="distance-btn"
-      data-distance="5"
+      <p class="distance-title">
+        📍 Distance
+      </p>
+
+      <div class="distance-buttons">
+
+        <button
+          type="button"
+          class="distance-btn active"
+          data-distance="10"
+          aria-label="Nearby, 10 miles"
+        >
+          <span class="distance-icon">🚗</span>
+          <span class="distance-label">Nearby</span>
+          <span class="distance-mile">10 mi</span>
+        </button>
+
+        <button
+          type="button"
+          class="distance-btn"
+          data-distance="5"
+          aria-label="Quick, 5 miles"
+        >
+          <span class="distance-icon">🚶</span>
+          <span class="distance-label">Quick</span>
+          <span class="distance-mile">5 mi</span>
+        </button>
+
+        <button
+          type="button"
+          class="distance-btn"
+          data-distance="20"
+          aria-label="Worth the Drive, 20 miles"
+        >
+          <span class="distance-icon">🌟</span>
+          <span class="distance-label">Worth the Drive</span>
+          <span class="distance-mile">20 mi</span>
+        </button>
+
+        <button
+          type="button"
+          class="distance-btn"
+          data-distance="50"
+          aria-label="Anywhere, 50 miles"
+        >
+          <span class="distance-icon">🌎</span>
+          <span class="distance-label">Anywhere</span>
+          <span class="distance-mile">50 mi</span>
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      id="restaurant"
+      class="restaurant-card"
+      aria-live="polite"
     >
-      🚶 Quick
-      <span>5 mi</span>
-    </button>
-
-    <button
-      class="distance-btn"
-      data-distance="20"
-    >
-      🌟 Worth the Drive
-      <span>20 mi</span>
-    </button>
-
-    <button
-      class="distance-btn"
-      data-distance="50"
-    >
-      🌎 Anywhere
-    </button>
-
-  </div>
-
-</section>
-
-<section
-  id="restaurant"
-  class="restaurant-card"
-  aria-live="polite"
->
-
-
       <p class="starting-message">
         Choose a food type to get started 😊
       </p>
@@ -174,7 +188,7 @@
 
   </main>
 
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=18"></script>
 
 </body>
 
