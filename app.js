@@ -4,6 +4,7 @@ let currentRestaurant = null;
 let currentFoodType = null;
 let currentSearchType = null;
 let lastSurpriseType = null;
+let selectedDistance = 10;
 
 const API_URL =
   "https://feed-tobin-api.hzieeff.workers.dev";
@@ -58,6 +59,16 @@ const surpriseTypes = [
   "local_food",
 ];
 
+
+document.querySelectorAll(".distance-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".distance-btn")
+      .forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedDistance = Number(btn.dataset.distance);
+  });
+});
+
 function findFood(type) {
   currentFoodType = type;
 
@@ -98,7 +109,8 @@ async function findFoodFromApi(type) {
         const requestUrl =
           `${API_URL}/?lat=${encodeURIComponent(lat)}` +
           `&lng=${encodeURIComponent(lng)}` +
-          `&type=${encodeURIComponent(type)}`;
+          `&type=${encodeURIComponent(type)}` +
+          `&radius=${selectedDistance}`;
 
         const response = await fetch(requestUrl);
 

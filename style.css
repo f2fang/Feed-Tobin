@@ -193,6 +193,94 @@ h1 {
 .food-buttons .surprise-button:hover {
   background: var(--orange-dark);
 }
+/* =========================
+   Distance
+   ========================= */
+
+.distance-section {
+  width: 100%;
+  margin: -10px 0 28px;
+}
+
+.distance-title {
+  margin: 0 0 12px;
+
+  color: var(--muted);
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.distance-buttons {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.distance-btn {
+  width: 100%;
+  min-height: 56px;
+
+  padding: 10px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  background: #ffffff;
+  color: var(--text);
+
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.06);
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.distance-btn span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  color: var(--muted);
+}
+
+.distance-btn:hover {
+  background: var(--orange-light);
+  transform: translateY(-2px);
+}
+
+.distance-btn.active {
+  background: var(--orange);
+
+  color: white;
+
+  border-color: var(--orange);
+}
+
+.distance-btn.active span {
+  color: rgba(255,255,255,0.9);
+}
+
+.distance-btn:focus-visible {
+  outline: 3px solid rgba(255,116,51,.3);
+  outline-offset: 3px;
+}
+
 
 /* =========================
    Restaurant result
@@ -368,6 +456,17 @@ h1 {
    ========================= */
 
 @media (max-width: 620px) {
+
+  .distance-buttons {
+    gap: 8px;
+  }
+
+  .distance-btn {
+    min-height: 52px;
+    font-size: 0.9rem;
+  }
+
+
   .container {
     width: min(100% - 24px, 760px);
     padding-top: 18px;
